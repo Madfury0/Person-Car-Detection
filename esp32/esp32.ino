@@ -1,13 +1,15 @@
 #include <person_and_car_perfect_model_inferencing.h>
+#include <HardwareSerial.h>
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 #include "esp_camera.h"
-#include "SoftwareSerial.h"
 
 //sensors pins
 #define trigPin 2
 #define echoPin 4
 #define vibratorPin 15
 #define LedPin 33
+#define RX **
+#define TX **
 
 //camera pins
 #define PWDN_GPIO_NUM     32
@@ -75,6 +77,7 @@ bool ei_camera_init(void);
 void ei_camera_deinit(void);
 bool ei_camera_capture(uint32_t img_width, uint32_t img_height, uint8_t *out_buf) ;
 
+Hardware Serial1(1);
 
 void setup()
 {
@@ -84,6 +87,7 @@ void setup()
    pinMode(LedPin, OUTPUT);
 
    Serial.begin(115200);
+   Serial1.begin(9600, SERIAL_8N1, RX, TX);
    
     while (!Serial);
     Serial.println("Edge Impulse Inferencing Demo");
@@ -171,27 +175,10 @@ void loop()
             continue;
         }
         
-        String prediction = bb.label;
-        float confidence = bb.value;
         
        ei_printf("    %s: %.5f\n",prediction,confidence);
         
-       // ei_printf("    %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\n", bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
-        if (prediction == "person" && confidence >= 0.8) {
-	/* 
-	Logic to allow esp32 communicate with the arduino controller to handle audio if a person is detected.
-	#Considering using SoftwareSerial to handle communication
-	#Considering using TMRpcm library to play audio
-
-
-	*/
-        }
-        // Check if the prediction is 'car' with confidence 0.8 or above
-        else if (prediction == "car" && confidence >= 0.8) {
-	/*
-	Same as the above logic
-	*/
-        }
+       ei_printf("    %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\n", bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
     }
     if (!bb_found) {
         ei_printf("    No objects found\n");
@@ -201,19 +188,16 @@ void loop()
 
 
 for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
-/*
-String prediction;                                      float confidence;
+String prediction = result.classification[ix].label;
+float confidence = result.classification[ix].value;
 
-prediction = result.classification[ix].label;
-confidence = result.classification[ix].value; 
-if (prediction == "person" && confidence >= 0.8) {
-            playAudio(person_wav);
+if (prediction == "person" && confidence >= 0.6){
+Serial1.println ("Person detected");
         }                                               
 else if (prediction == "car" && confidence >= 0.
-8) {                                                                playAudio(car_wav);
+6){
+Serial1.println ("Car detected");
  }
- */
-
 
 ei_printf("    %s: %.5f\n",result.classification[ix].label,result.classification[ix].value); 
 }

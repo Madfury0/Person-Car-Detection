@@ -11,40 +11,39 @@ Power LED will indicate if the device is ON
 */
 
 #include <Arduino.h>
-#include "SoftwareSerial.h"
+#include <SoftwareSerial.h>
 #include "TMRpcm.h"
 #include "sound.h"
 
-#define RXpin **
-#define TXpin **
+#define RX **
+#define TX **
 #define powerLED 15
+
+SoftwareSerial mySerial(RX, TX);
 
 
 void setup(){
-	Serial.begin (9600); //serial monitor
-
-	/*
-	serial innitialition code goes here
-	*/
-
-
-	pinMode (powerLED, OUTPUT)
-	analogWrite (powerLED, 80) //limits brightness
+	mySerial.begin (9600);
+	pinMode (powerLED, OUTPUT);
+	analogWrite (powerLED, 80); //limits brightness
 
 	}
 
 void loop()
 	{
-	Serial.println ("Awaiting ESP32 message")
-	message = Serial2.read()
-	if ( message.text == "person" ){
-	//play person audio
-	delay (200)
-	}
-	else{
-	//play car audio
-	delay (200)
+	if (mySerial.available()) {
+    String message = mySerial.readStringUntil('\n');
+    if (message == "Person detected") {
+      //play person audio logic
+    }
+    else if (message == "Car detected") {
+    //play car audio logic
 
+    }
+  }
 	}
 
-	}
+void PlayAudio (){
+//Use TMRpcm to play the audio file
+
+}
