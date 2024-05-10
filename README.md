@@ -3,3 +3,12 @@ A wearable AI assisted device for the blind that will assist them in navigating 
 #The training was done on google colab.
 #Model comversion was handled on edge impulse
 
+#ESP32 was used to handle:
+                >> Image recognition and processing.
+                >> Proximity system
+                >> Vibration mechanism
+#Arduino was used to handle:
+                >> Audio processing
+
+                
+
