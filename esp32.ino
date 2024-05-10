@@ -1,18 +1,13 @@
 #include <person_and_car_perfect_model_inferencing.h>
-#include <pgmspace.h>
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 #include "esp_camera.h"
-#include "sound.h"
+#include "SoftwareSerial.h"
 
 //sensors pins
 #define trigPin 2
 #define echoPin 4
 #define vibratorPin 15
-#define SpeakerPin 14
 #define LedPin 33
-
-//constants
-const int sampleRate =  16000; 
 
 //camera pins
 #define PWDN_GPIO_NUM     32
@@ -85,7 +80,6 @@ void setup()
 {
    pinMode(trigPin, OUTPUT);
    pinMode(echoPin, INPUT);
-   pinMode(SpeakerPin, OUTPUT);
    pinMode(vibratorPin, OUTPUT);
    pinMode(LedPin, OUTPUT);
 
