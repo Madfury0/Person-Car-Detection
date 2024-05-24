@@ -7,6 +7,10 @@ TMRpcm will handle the audio processing
 
 The sound.h file will hold the data containing the audio files
 
+PROGMEM ensures that the audio files are stored in program memory 
+
+strcpy_P copies the audio file from program memory to RAM
+
 Power LED will indicate if the device is ON
 */
 
@@ -19,6 +23,8 @@ Power LED will indicate if the device is ON
 #define TX **
 #define powerLED 15
 #define speakerPin 9
+
+#define Audio_Length 35885 //audio file length + null terminator 
 
 SoftwareSerial mySerial(RX, TX);
 TMRpcm tmrpcm; //creates an object name tmrpcm
@@ -47,18 +53,23 @@ void setup() {
 void loop() {
 	if (mySerial.available()) {
 		String message = mySerial.readStringUntil('\n');
-		char wavFile[];
+
+		char wavFile[Audio_Length];
 
 		if (message == "Person detected") {
 			//play person audio logic
 			strcpy_P(wavFile, wav_table[0]);
 			tmrpcm.play(wavFile);
 			}
+    wavFile[Audio_Length] = 0; // null terminator to mitigate memory leak(buffer overflow), not sure if it will work, we will see :)
+
 
 		else if (message == "Car detected") {
 			//play car audio logic
 			strcpy_P(wavFile, wav_table[1];
 			tmrpcm.play(wavFile);
 			}
+   wavFile[Audio_Length] = 0;
+
 		}
 	}
