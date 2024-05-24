@@ -93,22 +93,25 @@ void setup()
    pinMode(vibratorPin, OUTPUT);
    pinMode(LedPin, OUTPUT);
 
-   Serial.begin(115200);
    Serial1.begin(9600, SERIAL_8N1, RX, TX);
    
-    while (!Serial);
-    Serial.println("Edge Impulse Inferencing Demo");
     if (ei_camera_init() == false) {
-        ei_printf("Failed to initialize Camera!\r\n");
+        /*
+
+	Failed to initialize Camera!
+	handle without serial monitor
+	morse code??
+	LedPin 3 times blink?
+
+	*/
     }
     else {
-        ei_printf("Camera initialized\r\n");
-    }
+   	/*
+        Camera initialized
+	same case
+	*/
 
-    ei_printf("\nStarting continious inference in 2 seconds...\n");
-    digitalWrite(LedPin,HIGH);
-    ei_sleep(2000);
-    digitalWrite(LedPin,LOW);
+    }
 
 }
 
@@ -128,13 +131,18 @@ void loop()
 
     // Calculate distance in centimeters
     int distance = duration * 0.034 / 2;
+    /*
 
-    // Print distance to Serial Monitor
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.println(" cm");
-       
-    // Check if distance is 50cm or below to switch on the vibrator logic
+    Check if distance is 50cm or below to switch on the vibrator logic
+
+    pretty sure i'll forget so let me start some rumbling
+    why am I using vim instead of using arduino ide like every nerd out there
+    i can't even exit tthis thing 
+    I guess I'll ask her to be my girlfriend some day when I gather enough courage,but damn, that's the hardest thing I'll ever do.
+    Enough rumbling for now 
+
+    */
+
         
         //EDGE IMPULSE INFERENCING
     
@@ -147,7 +155,8 @@ void loop()
 
     // check if allocation was successful
     if(snapshot_buf == nullptr) {
-        ei_printf("ERR: Failed to allocate snapshot buffer!\n");
+
+    	//ERR: Failed to allocate snapshot buffer
         return;
     }
 
@@ -156,8 +165,8 @@ void loop()
     signal.get_data = &ei_camera_get_data;
 
     if (ei_camera_capture((size_t)EI_CLASSIFIER_INPUT_WIDTH, (size_t)EI_CLASSIFIER_INPUT_HEIGHT, snapshot_buf) == false) {
-        ei_printf("Failed to capture image\r\n");
-        free(snapshot_buf);
+    	//failed to capture image so release memory
+	free(snapshot_buf);
         return;
     }
 
@@ -166,13 +175,9 @@ void loop()
 
     EI_IMPULSE_ERROR err = run_classifier(&signal, &result, debug_nn);
     if (err != EI_IMPULSE_OK) {
-        ei_printf("ERR: Failed to run classifier (%d)\n", err);
+        //failed to run classifier, do the early return
         return;
     }
-
-    // print the predictions
-    ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.): \n",
-                result.timing.dsp, result.timing.classification, result.timing.anomaly);
 
 #if EI_CLASSIFIER_OBJECT_DETECTION == 1
     bool bb_found = result.bounding_boxes[0].value > 0;
@@ -181,15 +186,8 @@ void loop()
         if (bb.value == 0) {
             continue;
         }
-        
-        
-       ei_printf("    %s: %.5f\n",prediction,confidence);
-        
-       ei_printf("    %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\n", bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
     }
-    if (!bb_found) {
-        ei_printf("    No objects found\n");
-    }
+
 #else
   
 
@@ -206,27 +204,15 @@ else if (prediction == "car" && confidence >= 0.
 Serial1.println ("Car detected");
  }
 
-ei_printf("    %s: %.5f\n",result.classification[ix].label,result.classification[ix].value); 
 }
- 
-        
+     
     }
 #endif
-
-#if EI_CLASSIFIER_HAS_ANOMALY == 1
-        ei_printf("    anomaly score: %.3f\n", result.anomaly);
-#endif
-
 
     free(snapshot_buf);
 
 }
 
-/**
- * @brief   Setup image sensor & start streaming
- *
- * @retval  false if initialisation failed
- */
 bool ei_camera_init(void) {
 
     if (is_initialised) return true;
@@ -234,7 +220,7 @@ bool ei_camera_init(void) {
     //initialize the camera
     esp_err_t err = esp_camera_init(&camera_config);
     if (err != ESP_OK) {
-      Serial.printf("Camera init failed with error 0x%x\n", err);
+      //Camera init failed with error
       return false;
     }
 
@@ -250,9 +236,8 @@ bool ei_camera_init(void) {
     return true;
 }
 
-/**
- * @brief      Stop streaming of sensor data
- */
+//Stop streaming of sensor data
+
 void ei_camera_deinit(void) {
 
     //deinitialize the camera
@@ -260,7 +245,7 @@ void ei_camera_deinit(void) {
 
     if (err != ESP_OK)
     {
-        ei_printf("Camera deinit failed\n");
+        //camera deinit failed
         return;
     }
 
@@ -284,14 +269,14 @@ bool ei_camera_capture(uint32_t img_width, uint32_t img_height, uint8_t *out_buf
     bool do_resize = false;
 
     if (!is_initialised) {
-        ei_printf("ERR: Camera is not initialized\r\n");
+        //camera not innitialized
         return false;
     }
 
     camera_fb_t *fb = esp_camera_fb_get();
 
     if (!fb) {
-        ei_printf("Camera capture failed\n");
+        //camera capture failed
         return false;
     }
 
@@ -300,7 +285,7 @@ bool ei_camera_capture(uint32_t img_width, uint32_t img_height, uint8_t *out_buf
    esp_camera_fb_return(fb);
 
    if(!converted){
-       ei_printf("Conversion failed\n");
+       //failed conversion
        return false;
    }
 
