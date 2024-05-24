@@ -11,40 +11,54 @@ Power LED will indicate if the device is ON
 */
 
 #include <Arduino.h>
-#include "SoftwareSerial.h"
+#include <SoftwareSerial.h>
 #include "TMRpcm.h"
 #include "sound.h"
 
-#define RXpin **
-#define TXpin **
+#define RX **
+#define TX **
 #define powerLED 15
+#define speakerPin 9
+
+SoftwareSerial mySerial(RX, TX);
+TMRpcm tmrpcm; //creates an object name tmrpcm
+
+static const char car_wav[] PROGMEM = car_wav []; //car audio wav file stored locally
+static const char person_wav [] PROGMEM = person_wav []; // person audio wav file stored locally
 
 
-void setup(){
-	Serial.begin (9600); //serial monitor
-
-	/*
-	serial innitialition code goes here
-	*/
-
-
-	pinMode (powerLED, OUTPUT)
-	analogWrite (powerLED, 80) //limits brightness
-
-	}
-
-void loop()
-	{
-	Serial.println ("Awaiting ESP32 message")
-	message = Serial2.read()
-	if ( message.text == "person" ){
-	//play person audio
-	delay (200)
-	}
-	else{
-	//play car audio
-	delay (200)
+// audio files table
+const char *wav_table []{
+	person_wav[],
+	car_wav[]
 
 	}
 
+
+void setup() {
+	mySerial.begin (9600);
+	tmrpcm.speakerPin = speakerPin;
+
+	pinMode (powerLED, OUTPUT);
+	analogWrite (powerLED, 80); //limits brightness
+
+	}
+
+void loop() {
+	if (mySerial.available()) {
+		String message = mySerial.readStringUntil('\n');
+		char wavFile[];
+
+		if (message == "Person detected") {
+			//play person audio logic
+			strcpy_P(wavFile, wav_table[0]);
+			tmrpcm.play(wavFile);
+			}
+
+		else if (message == "Car detected") {
+			//play car audio logic
+			strcpy_P(wavFile, wav_table[1];
+			tmrpcm.play(wavFile);
+			}
+		}
 	}
