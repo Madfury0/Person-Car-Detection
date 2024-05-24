@@ -22,7 +22,10 @@ Arduino was used to handle:
 
 HardwareSerial is used to initilize esp32 as the master and SoftwareSerial initializes arduino as the slave.
 
-Two directories are required for as each microcontroller will have its own hex file. The sound.h file was placed in the arduino directory as arduino will handle the audio processing.
+Two directories are required for as each microcontroller will have its own hex file. 
+The sound.h file was placed in the arduino directory as arduino will handle the audio processing.
+Progmem ensures that the audio array was stored in program memory of the arduino.
+strcpy_P copies the audio file from program memory to RAM
 A power status LED is included which will show the power status of the device.
 
 
