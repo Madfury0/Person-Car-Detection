@@ -15,8 +15,8 @@
 #define echoPin 4
 #define vibratorPin 15
 #define LedPin 33
-#define RX **
-#define TX **
+#define RX 3
+#define TX 1
 
 //camera pins
 #define PWDN_GPIO_NUM     32
