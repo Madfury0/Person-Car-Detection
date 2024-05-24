@@ -61,14 +61,15 @@ void loop() {
 			strcpy_P(wavFile, wav_table[0]);
 			tmrpcm.play(wavFile);
 			}
-			wavFile[Audio_Length] = 0; // null terminator to mitigate memory leak(buffer overflow), not sure if it will work, we will see :)
 
+			wavFile[Audio_Length] = 0; // null terminator to mitigate memory leak(buffer overflow), not sure if it will work, we will see :)
 
 		else if (message == "Car detected") {
 			//play car audio logic
 			strcpy_P(wavFile, wav_table[1];
 			tmrpcm.play(wavFile);
 			}
+
 			wavFile[Audio_Length] = 0;
 
 		}
