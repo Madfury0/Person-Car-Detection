@@ -1,4 +1,4 @@
-# Brief Introduction
+# Introduction
 
 This project aims in developing and prototyping a  wearable AI assisted device for the blind that will assist them in navigating crowded areas. It will have a machine learning model running locally. The model will be able to classify and recognize persons and cars and provide useful feedback. The device will also have a proximity alert system.
 
@@ -60,7 +60,7 @@ The model has an architecture of:
 
 ---
 
-                ### Circuit connection
+## Circuit connection
 
 - RX pin of ESP32CAM was connected to TX pin of the arduino and the TX pin of the ESP32CAM was connected to RX pin of the arduino.
 - The amplifier IC input pin was interfaced with arduino's pin A9. 
